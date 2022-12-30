@@ -1,42 +1,83 @@
 @extends('layouts.app')
 @section('content')
     <div class="container">
-        <form id="productForm" onsubmit="event.preventDefault(); submitForm()">
-            <legend>Product Information</legend>
-            @method('PUT')
-            <div class="form-group">
-                <label for="">Name</label>
-                <input type="text" name="name" required id="name" class="form-control" />
-            </div>
+        <form id="userForm" onsubmit="event.preventDefault(); submitForm()">
+                        @csrf
+                        @method("PUT")
+                        <div class="row mb-3">
+                            <label for="fname" class="col-md-4 col-form-label text-md-end">{{ __('Frist Name') }}</label>
 
-            <div class="form-group">
-                <label for="">Image</label>
-                <input type="file" name="image" id="image" class="form-control" />
-                <img src="" id="img-display" style="width: 100px; height:auto" alt="">
+                            <div class="col-md-6">
+                                <input id="fname" type="text" class="form-control @error('fname') is-invalid @enderror" name="fname" value="{{ old('fname') }}" required autocomplete="fname" autofocus>
 
-            </div>
+                                @error('name')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="lname" class="col-md-4 col-form-label text-md-end">{{ __('Last Name') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="lname" type="text" class="form-control @error('lname') is-invalid @enderror" name="lname" value="{{ old('lname') }}" required autocomplete="lname" autofocus>
+
+                                @error('name')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
+
+                                @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
 
 
-            <div class="form-group">
-                <label for="">Description</label>
-                <textarea name="description" required id="description" class="form-control"></textarea>
-            </div>
+                        <div class="row mb-3">
+                            <label for="phone" class="col-md-4 col-form-label text-md-end">{{ __('Phone Number') }}</label>
 
-            <div class="form-group">
-                <br>
-                <button type="submit" class="btn btn-primary">
-                    Save
-                </button>
-            </div>
+                            <div class="col-md-6">
+                                <input id="phone" type="number" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone') }}" required autocomplete="phone">
 
-        </form>
+                                @error('phone')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                     
+
+                        <div class="row mb-0">
+                            <div class="col-md-6 offset-md-4">
+                                <button type="submit" class="btn btn-primary">
+                                    {{ __('Update') }}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
     </div>
 
     <script>
         function submitForm() {
-            var formData = new FormData(document.getElementById('productForm'));
+            var formData = new FormData(document.getElementById('userForm'));
 
-            $.ajax("{{ url('api/products/'. $product->id) }}", {
+            $.ajax("{{ url('api/admin/'.$user->id.'/user') }}", {
                 dataType: 'json', // type of response data
                 data: formData,
                 processData: false,
@@ -50,9 +91,13 @@
                         icon: 'success',
                         title: 'Success',
                         text: data.message,
+                          timer: 1500,
+
+                    }).then(function() {
+                    window.location.href = "{{ url('admin/users') }}"
                     });
 
-                    
+
                 },
                 error: function(jqXhr, textStatus, errorMessage) { // error callback 
                     console.log(errorMessage);
@@ -67,8 +112,9 @@
             });
         }
 
+
         function getData() {
-            $.ajax("{{ url('api/products/' . $product->id) }}", {
+            $.ajax("{{ url('api/admin/user/' . $user->id) }}", {
                 dataType: 'json', // type of response data
                 processData: false,
                 contentType: false,
@@ -77,10 +123,11 @@
 
                 success: function(data, status, xhr) { // success callback function
                     console.log(data.data);
-                    let product = data.data;
-                    $("#name").val(product.name);
-                    $("#description").val(product.description);
-                    $("#img-display").attr('src', product.image);
+                    let user = data.data;
+                    $("#lname").val(user.lname);
+                    $("#fname").val(user.fname);
+                    $("#phone").val(user.phone);
+                    $("#email").val(user.email);
                 },
                 error: function(jqXhr, textStatus, errorMessage) { // error callback 
                     console.log(errorMessage);
@@ -97,5 +144,6 @@
         $(window).ready(function() {
             getData();
         })
+       
     </script>
 @endsection

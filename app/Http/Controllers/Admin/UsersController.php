@@ -11,9 +11,13 @@ use Illuminate\Support\Facades\Auth;
 class UsersController extends Controller
 {
     //
-    public function index($user_id)
+    public function index()
     {
         return response(['data' => Users::where('role', 1)->get()], 200);
+    }
+    public function info($id)
+    {
+        return response(['data' => Users::find($id)], 200);
     }
     public function index_users()
     {
@@ -59,20 +63,19 @@ class UsersController extends Controller
 
     public function update($id, Request $request)
     {
-        if (Users::find($id)) {
-            if (Users::find($id)->user_admin != $request->user_admin) {
-                return response(['message' => "Un authorized for this user account"], 403);
-            }
-        } else {
-            return response(['message' => "Not found"], 404);
-        }
+        // if (Users::find($id)) {
+        //     if (Users::find($id)->user_admin != $request->user_admin) {
+        //         return response(['message' => "Un authorized for this user account"], 403);
+        //     }
+        // } else {
+        //     return response(['message' => "Not found"], 404);
+        // }
 
 
         $validator = Validator::make($request->all(), [
             'fname' => ['required', 'string', 'max:255'],
             'lname' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'min:10', ],
-            'role' => ['required', 'string'],
             'email' => [
                 'required', 'string', 'email', 'max:255',
                 \Illuminate\Validation\Rule::unique('users')->ignore($id)
@@ -89,7 +92,6 @@ class UsersController extends Controller
                 'lname' => $request->lname,
                 'phone' => $request->phone,
                 'email' => $request->email,
-                'role' => $request->role,
             ]
         );
         return response([
@@ -103,17 +105,25 @@ class UsersController extends Controller
 
     public function delete($id, Request $request)
     {
-        if (Users::find($id)) {
-            if (Users::find($id)->user_admin != $request->user_admin) {
-                return response(['message' => "Un authorized for this user account"], 403);
-            }
-        } else {
-            return response(['message' => "Not found"], 404);
-        }
+        // if (Users::find($id)) {
+        //     if (Users::find($id)->user_admin != $request->user_admin) {
+        //         return response(['message' => "Un authorized for this user account"], 403);
+        //     }
+        // } else {
+        //     return response(['message' => "Not found"], 404);
+        // }
 
         Users::where("id", $id)->delete();
         return
             response(['message' => 'user removed'], 200);
+    }
+
+    public function delete_user($id, Request $request)
+    {
+
+        Users::where("id", $id)->delete();
+        return
+            back();
     }
 
 
@@ -124,5 +134,10 @@ class UsersController extends Controller
     public function create()
     {
         return view("users.create");
+    }
+
+    public function edit($id){
+        $data['user'] = Users::findOrFail($id);
+        return view("users.edit", $data);
     }
 }

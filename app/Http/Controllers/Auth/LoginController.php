@@ -5,6 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use App\Models\User;
+use Hash;
+
+use Auth;
 
 class LoginController extends Controller
 {
@@ -36,5 +41,21 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+
+    public function login(Request $request)
+    {
+        $username = request()->get('email');
+        $password = request()->get('password');
+    
+        $user = User::where('phone', $username)->orWhere('email', $username)->first();
+        if ($user === null || !Hash::check($password, $user->password)) {
+            return back()->with("error","wrong credentials");
+        }
+    
+        Auth::guard('web')->login($user);
+       
+        return redirect("home");
     }
 }

@@ -21,7 +21,7 @@
 
     <script>
         function getData() {
-            $.ajax("{{ url('api/admin/user/'.Auth::id()) }}", {
+            $.ajax("{{ url('api/admin/user/') }}", {
                 dataType: 'json', // type of response data
                 processData: false,
                 contentType: false,
@@ -34,11 +34,11 @@
                     var tr = "";
                     $.each(data.data, function(index, value) {
                         var editbtn =
-                            "<a class='btn btn-link text-success' href='{{ url('/user') }}/" + value
+                            "<a class='btn btn-link text-success' href='{{ url('admin/user') }}/" + value
                             .id + "/edit'>edit</a>";
 
                         var deteleBtn =
-                            "<form method='POST' action='{{ url('user/') }}/" + value.id +
+                            "<form method='POST' action='{{ url('/admin/user/') }}/" + value.id +
                             "/delete'><input name='_method' type='hidden' value='delete'><button  class='btn btn-link text-danger'>delete</button></form>";
                        
                         tr +=

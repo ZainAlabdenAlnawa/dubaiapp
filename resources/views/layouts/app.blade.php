@@ -31,6 +31,8 @@
 
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
 </head>
 
 <body>
@@ -84,8 +86,8 @@
                             @else
                                 <li class="nav-item">
 
-                                    <a class="nav-link" href="{{ url('products/user') }}">
-                                        Products
+                                    <a class="nav-link" href="{{ url('products/view/user') }}">
+                                       My Assinged Products
                                     </a>
                                 </li>
                             @endif
@@ -126,5 +128,9 @@
         </main>
     </div>
 </body>
-
+<script>
+    $(document).ready( function () {
+    $('table').DataTable();
+} );
+</script>
 </html>

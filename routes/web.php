@@ -36,6 +36,8 @@ Route::middleware("auth")->group(function(){
         Route::get("admin/users", [App\Http\Controllers\Admin\UsersController::class, 'index_users']);
 
         Route::get("admin/user/create", [App\Http\Controllers\Admin\UsersController::class, 'create']);
+        Route::get("admin/user/{id}/edit", [App\Http\Controllers\Admin\UsersController::class, 'edit']);
+        Route::delete("admin/user/{id}/delete", [App\Http\Controllers\Admin\UsersController::class, 'delete_user']);
 
 
     });
